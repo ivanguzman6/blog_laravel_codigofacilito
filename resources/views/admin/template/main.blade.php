@@ -13,7 +13,6 @@
 	</section>
 
 	<footer>
-		@
 	</footer>
 	<script src="{{ asset('plugins/jquery/js/jquery-3.1.1.min.js') }}"></script>
 	<script src="{{ asset('plugins/bootstrap/js/bootstrap.js') }}"></script>
