@@ -1,10 +1,6 @@
 @extends('admin.template.main')
 
-
-
 @section('title','Crear usuario')
-
-
 
 @section('content')
     {!! Form::open(['route'=>'users.store','method'=>'POST']) !!}

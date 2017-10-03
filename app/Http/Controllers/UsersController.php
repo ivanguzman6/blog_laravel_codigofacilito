@@ -2,12 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\User;
+use Laracasts\Flash\Flash;
+use App\Http\Requests\UserRequest;
 
 class UsersController extends Controller
 {
+
+    /*
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    */
+
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +24,9 @@ class UsersController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::orderBy('id','ASC')->paginate(5);
+        return view('admin.users.index')->with('users',$users);
+
     }
 
     /**
@@ -27,20 +38,26 @@ class UsersController extends Controller
     {
         //
         return view('admin.users.create');
+
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\UserRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
         $user = new User($request->all());
         $user->password = bcrypt($request->getPassword());
         $user->save();
-        dd('Usuario Creado');
+
+        Flash::success("Se ha registrado " . $user->name . " de forma exitosa");
+        //flash("Se ha registrado " . $user->name . " de forma exitosa")->success();
+
+        return redirect()->route('users.index');
+
 
 
     }
@@ -64,7 +81,8 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::find($id);
+        return view('admin.users.edit')->with('user',$user);
     }
 
     /**
@@ -74,9 +92,20 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
-        //
+        $user= User::find($id);
+        $user->fill($request->all());
+
+        /**
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->type = $request->type;
+        */
+        $user->save();
+
+        Flash::warning('El usuario ' . $user->name . ' ha sido editado exitosamente');
+        return redirect()->route('users.index');
     }
 
     /**
@@ -87,6 +116,10 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        $user->delete();
+
+        Flash::error('El usuario ' . $user->name . ' ha sido borrado de forma exitosa');
+        return redirect()->route('users.index');
     }
 }

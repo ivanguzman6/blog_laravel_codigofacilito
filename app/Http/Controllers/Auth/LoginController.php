@@ -25,7 +25,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -36,4 +36,13 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    /**
+    public function setPasswordAttribute($password)
+    {
+        // or use this if you do not want to import
+        // the Hash Facade.
+        $this->password = bcrypt($password);
+    }
+     */
 }
